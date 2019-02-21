@@ -13,9 +13,7 @@ class BooksApp extends Component {
      * users can use the browser's back and forward buttons to navigate between
      * pages, as well as provide a good URL they can bookmark and share.
      */
-     books: [],
-
-    showSearchPage: false
+     books: []
   }
 
   componentDidMount() {
@@ -45,21 +43,23 @@ class BooksApp extends Component {
     return (
 
       <div className="app">
-        {this.state.showSearchPage ? (
-          
-                  <ListBooks 
-                      books={this.state.books}
-                      onChangeBook={this.changeBook}
-                      onshowSearchPage={this.state.showSearchPage}
-                    />
+          <Route path="/addbook" render={({ history })=>(
+              <ListBooks 
+                  books={this.state.books}
+                  onChangeBook={(book,shelf)=>{
+                      this.changeBook(book,shelf)
+                      history.push('/')
+                  }}
+              />
+          )}/>
                 
-        ) : (
           
-          <Bookcase
-            books={this.state.books}
-            onChangeBook={this.changeBook}
-          />
-        )}
+          <Route exact path="/" render={()=>(
+              <Bookcase
+                  books={this.state.books}
+                  onChangeBook={this.changeBook}
+              />
+          )}/>
       </div>
     )
   }

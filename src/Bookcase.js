@@ -1,8 +1,9 @@
 import React,  {Component} from 'react'
 import PropTypes from 'prop-types'
 import BookcaseConstruction from './BookcaseConstruction'
+import { Link } from 'react-router-dom'
 
-
+/*Componente que constroi a estante*/
 class Bookcase extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
@@ -35,7 +36,7 @@ class Bookcase extends Component {
                     }
                  </div>
                 <div className="open-search">
-                   <button onClick={() => this.setState({ showSearchPage: true })}>Add a book</button>
+                   <Link to="addbook">Add Book</Link>
                 </div>
             </div>
        
