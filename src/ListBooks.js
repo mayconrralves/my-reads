@@ -37,11 +37,13 @@ class ListBooks extends Component {
 	render(){
 		const { books, onChangeBook } = this.props
 		const { query } = this.state
+
 		let showingBooks = []
 		query.split(" ").map((q)=>{
 				if(q) {
 					showingBooks.push(...this.searchBook(q,books))
 					showingBooks = [...new Set(showingBooks)]
+
 				}		
 		})
 
@@ -56,18 +58,18 @@ class ListBooks extends Component {
 		                	   value={query}
 		                	   onChange={(event) => this.updateQuery(event.target.value)}
 		               	    />
-		                <div className='list-books'>
-								 <BookPrint
-		                        	showingBooks={showingBooks}
-		                        	onChangeBook={onChangeBook}
-		                      	/>
-						</div>
+		                
 	            </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid"></ol>
+	             <div className='list-books'>
+						<BookPrint
+			               	showingBooks={showingBooks}
+			               	onChangeBook={onChangeBook}
+			             />
+				 </div>
             </div>
-          </div>
+        </div>
 				
 			)
 	}

@@ -36,7 +36,7 @@ class Bookcase extends Component {
                     }
                  </div>
                 <div className="open-search">
-                   <Link to="addbook">Add Book</Link>
+                   <Link to="search">Add Book</Link>
                 </div>
             </div>
        

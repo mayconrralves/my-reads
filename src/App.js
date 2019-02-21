@@ -43,7 +43,7 @@ class BooksApp extends Component {
     return (
 
       <div className="app">
-          <Route path="/addbook" render={({ history })=>(
+          <Route path="/search" render={({ history })=>(
               <ListBooks 
                   books={this.state.books}
                   onChangeBook={(book,shelf)=>{
