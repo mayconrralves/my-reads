@@ -2,8 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import BookPrint from './BookPrint'
-import escapeRegExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
+import * as BooksAPI from './BooksAPI'
 
 
 class ListBooks extends Component {
@@ -14,7 +13,9 @@ class ListBooks extends Component {
 	}
 
 	state = {
-		query: ''
+		query: '',
+		newBooks: [],
+		err: true
 	}
 
 	updateQuery = (query)=>{
@@ -25,29 +26,30 @@ class ListBooks extends Component {
 		this.setState({query: ''})
 	}
 
-	searchBook = (query, books)=> {
-		            const match = new RegExp(escapeRegExp(query),'i')
-		            return [
-		            		...books.filter((book) => match.test(book.title)),
-		            		...books.filter((book) => match.test(book.authors.join(" ")))
-		            	   ]
+	searchBook = event => {
+		const query =event.target.value
+		this.updateQuery(query)
+			if(query) {
+				BooksAPI.search(query).then((books)=>{
+		            	if(books.length){
+		            		this.setState({ newBooks: books, err: false })
+		            	}
+		            	else {
+		            		this.setState({ newBooks: [], err: true });
+		            	}
+ 
+		            	
+		        })
+			} else {
+				this.setState({newBooks: [], err: false})
+			}
+		            
 		       		
 	}
 
 	render(){
-		const { books, onChangeBook } = this.props
-		const { query } = this.state
+		const { books, onChangeBook} = this.props
 
-		let showingBooks = []
-		query.split(" ").map((q)=>{
-				if(q) {
-					showingBooks.push(...this.searchBook(q,books))
-					showingBooks = [...new Set(showingBooks)]
-
-				}		
-		})
-
-		
 		return (
 			<div className="search-books">
 	            <div className="search-books-bar">
@@ -55,19 +57,40 @@ class ListBooks extends Component {
 		              <div className="search-books-input-wrapper">
 		                   <input type="text" 
 		                	   placeholder="Search by title or author"
-		                	   value={query}
-		                	   onChange={(event) => this.updateQuery(event.target.value)}
+		                	   value={this.state.query}
+		                	   onChange={this.searchBook}
 		               	    />
 		                
 	            </div>
             </div>
             <div className="search-books-results">
-	             <div className='list-books'>
+            {
+            	this.state.newBooks.length > 0 && (
+            		<div className='list-books'>
+            		{
+            			/*Adciona as marcacações nos livros visualizados que já estão em alguma estante*/
+            			this.state.newBooks.forEach((newBook)=> {
+            				books.forEach( (book)=> {
+            					if(newBook.id === book.id){
+            						newBook.shelf = book.shelf
+            					}
+            				})
+            			})
+            		}
+            		
 						<BookPrint
-			               	showingBooks={showingBooks}
+			               	showingBooks={this.state.newBooks}
 			               	onChangeBook={onChangeBook}
+			      
 			             />
-				 </div>
+     
+				 	</div>
+            	)
+            }
+            {this.state.err && (
+            <h3> No results</h3>
+          )}
+	             
             </div>
         </div>
 				

@@ -11,10 +11,10 @@ class Bookcase extends Component {
   }
   render() {
       const {books, onChangeBook} = this.props
-      let currentlyReading = books.filter((book)=>book.shelf==='currentlyReading')
-      let reads = books.filter((book)=>book.shelf==='read')
-      let wantToRead = books.filter((book)=>book.shelf==='wantToRead')
-      let bookcasesList = [
+      const currentlyReading = books.filter((book)=>book.shelf==='currentlyReading')
+      const reads = books.filter((book)=>book.shelf==='read')
+      const wantToRead = books.filter((book)=>book.shelf==='wantToRead')
+      const bookcasesList = [
                   {"bookcase": currentlyReading, "name":"Currently Reading"},
                   {"bookcase": wantToRead,"name": "Want To Read"},
                   {"bookcase": reads,"name": "Reads"}  

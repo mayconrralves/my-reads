@@ -2,18 +2,13 @@ import React,  {Component} from 'react'
 import * as BooksAPI from './BooksAPI'
 import ListBooks from './ListBooks'
 import Bookcase from './Bookcase'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+import NoMatch from './NoMatch'
 import './App.css'
 
 class BooksApp extends Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-     books: []
+     books: [],
   }
 
   componentDidMount() {
@@ -28,8 +23,19 @@ class BooksApp extends Component {
     BooksAPI.update(book,shelf).then(()=>{
       BooksAPI.get(book.id).then(b =>{
         let array = [...this.state.books]
-        let index = this.state.books.indexOf(book)
-        array[index] = b
+        let oldBook = array.filter((value)=>{
+          if(value.id === b.id)
+            return value
+          return null 
+        })
+        let index = array.indexOf(oldBook[0])
+        if(index > -1) {
+           array[index] = b
+        }
+        else {
+          array.push(b)
+        }
+       
         this.setState({books: array})
     })
     
@@ -43,12 +49,12 @@ class BooksApp extends Component {
     return (
 
       <div className="app">
+      <Switch>
           <Route path="/search" render={({ history })=>(
               <ListBooks 
                   books={this.state.books}
                   onChangeBook={(book,shelf)=>{
                       this.changeBook(book,shelf)
-                      history.push('/')
                   }}
               />
           )}/>
@@ -60,6 +66,8 @@ class BooksApp extends Component {
                   onChangeBook={this.changeBook}
               />
           )}/>
+          <Route component={NoMatch} />
+        </Switch>
       </div>
     )
   }
